@@ -184,8 +184,10 @@
           <rect x="19" y="98" width="52" height="24" rx="12" class="swg-slot"/>
           <circle cx="25" cy="110" r="6" class="swg-hole"/>
           <circle cx="65" cy="110" r="6" class="swg-hole"/>
-          <text x="45" y="82" class="swg-name" text-anchor="middle">三切</text>
-          <rect x="20" y="44" width="50" height="30" class="hit-toggle" data-action="toggle" data-comp-id="${c.id}"/>`;
+          <rect x="26" y="46" width="38" height="24" rx="3" class="swg-state on"/>
+          <text x="45" y="62" class="swg-stext" text-anchor="middle">${cross ? '✕' : '═'}</text>
+          <text x="45" y="88" class="swg-name" text-anchor="middle">三切</text>
+          <rect x="20" y="40" width="50" height="36" class="hit-toggle" data-action="toggle" data-comp-id="${c.id}"/>`;
       }
     },
 
