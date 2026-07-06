@@ -219,7 +219,7 @@ body {
 
 /* ===== 導線 ===== */
 .wire path { fill: none; }
-.wire .hit { stroke: transparent; stroke-width: 16; pointer-events: stroke; cursor: pointer; }
+.wire .hit { stroke: transparent; stroke-width: 24; pointer-events: stroke; cursor: pointer; }
 .wire .casing { stroke-width: 7; stroke-linecap: round; pointer-events: none; }
 .wire .core { stroke-width: 4; stroke-linecap: round; pointer-events: none; }
 .wire.red .casing { stroke: #8e2420; }
@@ -286,4 +286,33 @@ body {
   border-radius: 4px;
   padding: 1px 6px;
   font-size: 12px;
+}
+
+/* ===== 響應式設計 (RWD) ===== */
+@media (max-width: 768px) {
+  #toolbar { flex-wrap: wrap; gap: 10px; padding: 8px; }
+  .toolbar-right { flex-wrap: wrap; justify-content: flex-start; }
+  
+  #main { flex-direction: column-reverse; }
+  
+  #palette { 
+    width: 100%; 
+    height: auto;
+    border-right: none; 
+    border-top: 1px solid #dde3e8; 
+    display: flex; 
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
+    align-items: center; 
+    padding: 8px;
+    gap: 8px;
+  }
+  #palette h2 { display: none; }
+  .pal-btn { width: auto; margin: 0; flex-shrink: 0; padding: 8px 12px; }
+  #device-count { margin-top: 0; margin-left: 8px; flex-shrink: 0; }
+  
+  #statusbar { flex-wrap: wrap; gap: 8px; padding: 8px; }
+  #status-text { white-space: normal; line-height: 1.4; }
+  #view-controls { width: 100%; justify-content: space-between; margin-top: 4px; }
+  #zoom-slider { flex: 1; margin: 0 10px; }
 }

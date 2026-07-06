@@ -238,7 +238,7 @@
         const key = c.id + ':' + t.n;
         return `<g class="terminal ${t.cls || ''}" data-tkey="${key}" transform="translate(${c.x + t.x},${c.y + t.y})">
           <circle class="tc" r="7"/>
-          <circle class="thit" r="13"/>
+          <circle class="thit" r="20"/>
           ${t.label ? `<text class="tlabel" y="${t.ldy || 18}" text-anchor="middle">${t.label}</text>` : ''}
         </g>`;
       }).join('')
@@ -270,7 +270,7 @@
         const delY = mid.y + (oy > 0 ? -oy : oy);
         uiLayer.innerHTML = `
           <g class="wire-bend" data-action="bend-wire" data-wire-id="${w.id}" transform="translate(${mid.x},${mid.y})">
-            <circle class="bend-hit" r="14"/>
+            <circle class="bend-hit" r="20"/>
             <circle class="bend-dot" r="7"/>
           </g>
           <g class="wire-del" data-action="delete-wire" data-wire-id="${w.id}" transform="translate(${delX},${delY})">
@@ -389,6 +389,9 @@
 
   /* ---------- 指標事件(滑鼠 + 觸控) ---------- */
 
+  const activePointers = new Map();
+  let pinchStart = null;
+
   function setHover(el) {
     if (hoverTermEl === el) return;
     if (hoverTermEl) hoverTermEl.classList.remove('target-ok');
@@ -403,6 +406,24 @@
 
   svg.addEventListener('pointerdown', e => {
     if (e.button !== undefined && e.button !== 0) return;
+    activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (activePointers.size === 2) {
+      if (drag && drag.kind === 'pan') {
+        svg.classList.remove('panning');
+        drag = null;
+      }
+      const pts = Array.from(activePointers.values());
+      const cx = (pts[0].x + pts[1].x) / 2;
+      const cy = (pts[0].y + pts[1].y) / 2;
+      const pt = svg.createSVGPoint();
+      pt.x = cx; pt.y = cy;
+      pinchStart = {
+        dist: Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y),
+        zoom: view.zoom,
+        center: pt.matrixTransform(svg.getScreenCTM().inverse())
+      };
+      return;
+    }
     const pt = svgPoint(e);
     const delBtn = e.target.closest('[data-action="delete-wire"]');
     if (delBtn) { deleteWire(delBtn.dataset.wireId); return; }
@@ -449,6 +470,18 @@
   });
 
   svg.addEventListener('pointermove', e => {
+    if (activePointers.has(e.pointerId)) {
+      activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    }
+    if (activePointers.size === 2 && pinchStart) {
+      const pts = Array.from(activePointers.values());
+      const currentDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+      if (pinchStart.dist > 10) {
+        setZoom(pinchStart.zoom * (currentDist / pinchStart.dist), pinchStart.center);
+      }
+      return;
+    }
+
     if (!drag) return;
     if (drag.kind === 'pan') {
       const ctm = svg.getScreenCTM();
@@ -489,6 +522,8 @@
   });
 
   svg.addEventListener('pointerup', e => {
+    activePointers.delete(e.pointerId);
+    if (activePointers.size < 2) pinchStart = null;
     if (!drag) return;
     if (drag.kind === 'wire') {
       const term = hoverTermEl || termUnderPointer(e);
@@ -549,7 +584,9 @@
     }
   });
 
-  svg.addEventListener('pointercancel', () => {
+  svg.addEventListener('pointercancel', e => {
+    activePointers.delete(e.pointerId);
+    if (activePointers.size < 2) pinchStart = null;
     setHover(null);
     svg.classList.remove('panning');
     drag = null;
