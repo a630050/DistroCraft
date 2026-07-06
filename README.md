@@ -15,8 +15,6 @@
 
 👉 **[立即點此開始練習](https://a630050.github.io/DistroCraft/)**
 
-*(註：若剛推送到 GitHub，請確保已在 Settings -> Pages 啟用 GitHub Pages 功能)*
-
 ## 🛠️ 本地執行
 
 本專案為純前端靜態網頁（HTML / CSS / Vanilla JavaScript），無需繁雜的編譯或後端環境：
