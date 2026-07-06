@@ -88,9 +88,9 @@
       }
     },
 
-    /* ---------- 單切開關(背面:上下各一對速接孔,同對互通) ---------- */
+    /* ---------- 單路開關(背面:上下各一對速接孔,同對互通) ---------- */
     switch1: {
-      name: '單切開關',
+      name: '單路開關',
       w: 90, h: 130,
       terminals: [
         { n: 't1', x: 33, y: 20 },  { n: 't2', x: 57, y: 20 },
@@ -116,14 +116,14 @@
           <line x1="39" y1="110" x2="51" y2="110" class="swg-bridge"/>
           <rect x="26" y="46" width="38" height="24" rx="3" class="swg-state ${on ? 'on' : ''}"/>
           <text x="45" y="62" class="swg-stext" text-anchor="middle">${on ? '開' : '關'}</text>
-          <text x="45" y="88" class="swg-name" text-anchor="middle">單切</text>
+          <text x="45" y="88" class="swg-name" text-anchor="middle">單路</text>
           <rect x="20" y="40" width="50" height="36" class="hit-toggle" data-action="toggle" data-comp-id="${c.id}"/>`;
       }
     },
 
-    /* ---------- 雙切開關(三路):上方共用端 0,下方切換端 1、3 ---------- */
+    /* ---------- 三路開關:上方共用端 0,下方切換端 1、3 ---------- */
     switch3: {
-      name: '雙切開關',
+      name: '三路開關',
       w: 90, h: 130,
       terminals: [
         { n: '01', x: 33, y: 20 },  { n: '02', x: 57, y: 20 },
@@ -151,14 +151,14 @@
           <text x="57" y="94" class="swg-num" text-anchor="middle">3</text>
           <rect x="26" y="46" width="38" height="24" rx="3" class="swg-state on"/>
           <text x="45" y="62" class="swg-stext" text-anchor="middle">0−${p}</text>
-          <text x="45" y="82" class="swg-name" text-anchor="middle">雙切</text>
+          <text x="45" y="82" class="swg-name" text-anchor="middle">三路</text>
           <rect x="20" y="44" width="50" height="30" class="hit-toggle" data-action="toggle" data-comp-id="${c.id}"/>`;
       }
     },
 
-    /* ---------- 四路(三切)開關: 左右各一對端子,負責交叉替換 ---------- */
+    /* ---------- 四路開關: 左右各一對端子,負責交叉替換 ---------- */
     switch4: {
-      name: '三切開關',
+      name: '四路開關',
       w: 90, h: 130,
       terminals: [
         { n: 'L1', x: 25, y: 20 },
@@ -186,7 +186,7 @@
           <circle cx="65" cy="110" r="6" class="swg-hole"/>
           <rect x="26" y="46" width="38" height="24" rx="3" class="swg-state on"/>
           <text x="45" y="62" class="swg-stext" text-anchor="middle">${cross ? '✕' : '═'}</text>
-          <text x="45" y="88" class="swg-name" text-anchor="middle">三切</text>
+          <text x="45" y="88" class="swg-name" text-anchor="middle">四路</text>
           <rect x="20" y="40" width="50" height="36" class="hit-toggle" data-action="toggle" data-comp-id="${c.id}"/>`;
       }
     },
