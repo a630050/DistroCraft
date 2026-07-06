@@ -294,8 +294,8 @@
       return '⚡ NFB 已跳脫:請先排除短路,點 NFB 把手切到 OFF 後再重新送電。';
     }
     const n = sim.energized.size;
-    if (n > 0) return `✅ ${n} 個裝置通電中。點擊開關或 NFB 把手可切換，觀察電流動畫。`;
-    return '💡 左側加入元件 → 按住端子拖曳拉線 → 打開 NFB 與開關看結果。拖曳空白處平移畫布、滾輪縮放，Delete 刪除選取，❓說明有範例接法。';
+    if (n > 0) return `✅ ${n} 個裝置通電中。點擊開關或 NFB 把手可切換，觀察電流動畫。 -程式設計：徐承佑`;
+    return '💡 左側加入元件 → 按住端子拖曳拉線 → 打開 NFB 與開關看結果。拖曳空白處平移畫布、滾輪縮放，Delete 刪除選取，❓說明有範例接法。 -程式設計：徐承佑';
   }
 
   function updatePalette() {
