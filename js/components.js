@@ -156,6 +156,39 @@
       }
     },
 
+    /* ---------- 四路(三切)開關: 左右各一對端子,負責交叉替換 ---------- */
+    switch4: {
+      name: '三切開關',
+      w: 90, h: 130,
+      terminals: [
+        { n: 'L1', x: 25, y: 20 },
+        { n: 'L3', x: 25, y: 110 },
+        { n: 'R1', x: 65, y: 20 },
+        { n: 'R3', x: 65, y: 110 }
+      ],
+      init() { return { cross: false }; },
+      internalEdges(c) {
+        if (c.state.cross) {
+          return [['L1', 'R3'], ['L3', 'R1']];
+        } else {
+          return [['L1', 'R1'], ['L3', 'R3']];
+        }
+      },
+      render(c) {
+        const cross = c.state.cross;
+        return `
+          <rect x="6" y="4" width="78" height="122" rx="8" class="swg-body"/>
+          <rect x="19" y="8" width="52" height="24" rx="12" class="swg-slot"/>
+          <circle cx="25" cy="20" r="6" class="swg-hole"/>
+          <circle cx="65" cy="20" r="6" class="swg-hole"/>
+          <rect x="19" y="98" width="52" height="24" rx="12" class="swg-slot"/>
+          <circle cx="25" cy="110" r="6" class="swg-hole"/>
+          <circle cx="65" cy="110" r="6" class="swg-hole"/>
+          <text x="45" y="82" class="swg-name" text-anchor="middle">三切</text>
+          <rect x="20" y="44" width="50" height="30" class="hit-toggle" data-action="toggle" data-comp-id="${c.id}"/>`;
+      }
+    },
+
     /* ---------- 插座(背面視角,一長一短) ---------- */
     outlet: {
       name: '插座',

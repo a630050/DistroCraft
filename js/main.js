@@ -361,6 +361,8 @@
       c.state.on = !c.state.on;
     } else if (c.type === 'switch3') {
       c.state.pos = (c.state.pos === '1') ? '3' : '1';
+    } else if (c.type === 'switch4') {
+      c.state.cross = !c.state.cross;
     } else {
       return;
     }
