@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>配電練習小工具</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header id="toolbar">
+  <h1>⚡ 配電練習小工具</h1>
+  <div class="wire-picker">
+    <span>線色:</span>
+    <button id="btn-red" class="wire-btn red active" title="火線">紅線(火線)</button>
+    <button id="btn-white" class="wire-btn white" title="中性線">白線(中性線)</button>
+  </div>
+  <div class="toolbar-right">
+    <button id="btn-load-template" class="tool-btn" title="載入雙切開關範例">📄 載入模板</button>
+    <button id="btn-undo" class="tool-btn" title="復原 (Ctrl+Z)">↩ 復原</button>
+    <button id="btn-redo" class="tool-btn" title="重做 (Ctrl+Y)">↪ 重做</button>
+    <button id="btn-fit" class="tool-btn" title="自動縮放到可以看到所有元件">🔍 顯示全部</button>
+    <button id="btn-clear" class="tool-btn">🗑 重置畫布</button>
+    <button id="btn-help" class="tool-btn">❓ 說明</button>
+  </div>
+</header>
+
+<div id="main">
+  <aside id="palette">
+    <h2>元件庫</h2>
+    <button class="pal-btn" data-type="power">⚡ 電源 (110V)</button>
+    <button class="pal-btn" data-type="nfb">🔲 NFB 斷路器</button>
+    <button class="pal-btn" data-type="tblock">🟩 端子台</button>
+    <button class="pal-btn" data-type="switch1">🔘 單切開關</button>
+    <button class="pal-btn" data-type="switch3">🔀 雙切開關</button>
+    <button class="pal-btn" data-type="outlet">🔌 插座 (背面)</button>
+    <button class="pal-btn" data-type="outletBulb">🔆 插座+燈泡</button>
+    <button class="pal-btn" data-type="bulb">💡 燈泡</button>
+    <div id="device-count">裝置:0 / 3</div>
+  </aside>
+
+  <div id="canvas-wrap">
+    <svg id="canvas" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <pattern id="grid" width="25" height="25" patternUnits="userSpaceOnUse">
+          <path d="M25 0H0V25" fill="none" stroke="#e8eaed" stroke-width="1"/>
+        </pattern>
+        <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="6" result="b"/>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <rect id="world-bg" x="-1800" y="-1050" width="4800" height="2800" fill="url(#grid)"/>
+      <rect x="-1800" y="-1050" width="4800" height="2800" class="world-border"/>
+      <g id="components-layer"></g>
+      <g id="wires-layer"></g>
+      <g id="terminals-layer"></g>
+      <g id="ui-layer"></g>
+    </svg>
+    <div id="banner" class="hidden"></div>
+  </div>
+</div>
+
+<footer id="statusbar">
+  <span id="status-text"></span>
+  <div id="view-controls">
+    <button id="btn-zoom-out" class="zoom-btn" title="縮小">−</button>
+    <input type="range" id="zoom-slider" min="30" max="250" value="100" title="縮放比例">
+    <button id="btn-zoom-in" class="zoom-btn" title="放大">+</button>
+    <span id="zoom-label">100%</span>
+    <button id="btn-view-reset" class="zoom-btn wide" title="回到原點並恢復 100%">重設檢視</button>
+  </div>
+</footer>
+
+<div id="help-modal" class="hidden">
+  <div class="modal-card">
+    <h2>📖 操作說明</h2>
+    <h3>基本操作</h3>
+    <ul>
+      <li>從左側「元件庫」點選元件加入畫布,拖曳元件本體可移動位置。</li>
+      <li>上方選擇線色:<b style="color:#e53935">紅線=火線</b>、<b>白線=中性線</b>。</li>
+      <li><b>拉線:</b>按住任一端子(圓點)拖曳到另一個端子放開,即完成接線。</li>
+      <li>點選導線或元件後按 <kbd>Delete</kbd> 刪除;點選導線也會出現 ✕ 可刪除。</li>
+      <li><b>調整導線弧度:</b>點選導線後拖曳中間的圓形把手(或直接按住線身拖曳),把線彎到不遮擋的位置;<b>雙擊導線</b>可恢復預設曲線。</li>
+      <li>點擊 NFB 把手、開關搖板可切換 ON / OFF。</li>
+      <li><kbd>Ctrl</kbd>+<kbd>Z</kbd> 復原、<kbd>Ctrl</kbd>+<kbd>Y</kbd> 重做,步數不限;接線進度會自動儲存在瀏覽器,下次開啟自動還原。</li>
+      <li>「插座+燈泡」= 燈泡直接插在插座上:插座接線正確通電時,中間的燈泡直接亮起,不必再拉線接燈泡。</li>
+    </ul>
+    <h3>範例一:單切開關控一盞燈</h3>
+    <ol>
+      <li>電源 L(火線)→ 紅線 → NFB 電源側 L;電源 N → 白線 → NFB 電源側 N。</li>
+      <li>NFB 負載側 L → 紅線 → 單切開關上方任一孔。</li>
+      <li>開關下方任一孔 → 紅線 → 燈泡一端(上下兩孔各為一極,同排兩孔互通)。</li>
+      <li>燈泡另一端 → 白線 → NFB 負載側 N。</li>
+      <li>打開 NFB、打開開關 → 燈亮,導線上出現電流流動動畫!</li>
+    </ol>
+    <h3>範例二:兩顆雙切開關控一燈(樓梯燈)</h3>
+    <ol>
+      <li>加入兩顆雙切開關(A、B)。上方為共用端 0,下方為切換端 1、3。</li>
+      <li>火線 → A 的共用端 0。</li>
+      <li>A 的 1 ↔ B 的 1、A 的 3 ↔ B 的 3(兩條紅線)。</li>
+      <li>B 的共用端 0 → 燈泡 → 白線回中性線。</li>
+      <li>完成後,切換任何一顆開關都能開/關燈。</li>
+    </ol>
+    <h3>⚠ 注意</h3>
+    <ul>
+      <li>火線若不經負載直接接回中性線會造成<b>短路</b>,送電時 NFB 會跳脫!</li>
+      <li>NFB 跳脫後,需先把把手切到 OFF、排除短路,才能重新送電。</li>
+      <li>插座背面:<b style="color:#b8860b">銅色螺絲=火線側(短孔)</b>、銀色螺絲=中性線側(長孔)。</li>
+    </ul>
+    <button id="btn-close-help" class="tool-btn dark">關閉</button>
+  </div>
+</div>
+
+<script src="js/components.js"></script>
+<script src="js/simulation.js"></script>
+<script src="js/wiring.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
