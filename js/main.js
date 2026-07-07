@@ -294,8 +294,8 @@
       return '⚡ NFB 已跳脫:請先排除短路,點 NFB 把手切到 OFF 後再重新送電。';
     }
     const n = sim.energized.size;
-    if (n > 0) return `✅ ${n} 個裝置通電中。點擊開關或 NFB 把手可切換，觀察電流動畫。 -程式設計：徐承佑`;
-    return '💡 左側加入元件 → 按住端子拖曳拉線 → 打開 NFB 與開關看結果。拖曳空白處平移畫布、滾輪縮放，Delete 刪除選取，❓說明有範例接法。 -程式設計：徐承佑';
+    if (n > 0) return `✅ ${n} 個裝置通電中。點擊開關或 NFB 把手可切換，觀察電流動畫。`;
+    return '💡 左側加入元件 → 按住端子拖曳拉線 → 打開 NFB 與開關看結果。拖曳空白處平移畫布、滾輪縮放，Delete 刪除選取，❓說明有範例接法。';
   }
 
   function updatePalette() {
@@ -690,6 +690,72 @@
 
   document.getElementById('btn-undo').addEventListener('click', undo);
   document.getElementById('btn-redo').addEventListener('click', redo);
+
+  /* ---------- 匯出 / 匯入 ---------- */
+
+  document.getElementById('btn-export').addEventListener('click', () => {
+    const data = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      components: state.components,
+      wires: state.wires,
+      idSeq, wireSeq, addSeq,
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const ts = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+    a.href = url;
+    a.download = `配電組態_${ts}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showBanner('📤 組態已匯出！');
+  });
+
+  const importFileInput = document.getElementById('import-file');
+  document.getElementById('btn-import').addEventListener('click', () => {
+    importFileInput.value = '';
+    importFileInput.click();
+  });
+  importFileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        /* 驗證必要欄位是否存在 */
+        if (!Array.isArray(data.components) || !Array.isArray(data.wires)) {
+          throw new Error('檔案格式不正確：缺少 components 或 wires 欄位');
+        }
+        /* 驗證每個元件的 type 是否存在於 CompDefs 中 */
+        for (const c of data.components) {
+          if (!CompDefs[c.type]) {
+            throw new Error(`檔案包含不支援的元件類型：${c.type}`);
+          }
+        }
+        if (confirm('匯入將會取代目前的接線配置，確定要繼續嗎？(可用 Ctrl+Z 復原)')) {
+          const snap = JSON.stringify({
+            components: data.components,
+            wires: data.wires,
+            idSeq: data.idSeq || 100,
+            wireSeq: data.wireSeq || 100,
+            addSeq: data.addSeq || 100,
+          });
+          restoreSnap(snap);
+          commit();
+          zoomToFit();
+          showBanner('📥 組態已成功匯入！');
+        }
+      } catch (err) {
+        alert('匯入失敗：' + err.message);
+      }
+    };
+    reader.onerror = () => alert('讀取檔案時發生錯誤，請重試。');
+    reader.readAsText(file);
+  });
   document.getElementById('btn-fit').addEventListener('click', zoomToFit);
   document.getElementById('btn-zoom-in').addEventListener('click', () => setZoom(view.zoom * 1.2));
   document.getElementById('btn-zoom-out').addEventListener('click', () => setZoom(view.zoom / 1.2));

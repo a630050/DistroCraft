@@ -18,29 +18,29 @@ body {
   color: #fff;
   flex-shrink: 0;
 }
-#toolbar h1 { font-size: 17px; margin: 0 12px 0 0; white-space: nowrap; }
+#toolbar h1 { font-size: 15px; margin: 0 8px 0 0; white-space: nowrap; }
 
-.wire-picker { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.wire-picker { display: flex; align-items: center; gap: 6px; font-size: 12px; }
 .wire-btn {
   border: 2px solid transparent;
   border-radius: 20px;
-  padding: 5px 14px;
+  padding: 4px 12px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
 }
 .wire-btn.red { background: #e53935; color: #fff; }
 .wire-btn.white { background: #fafafa; color: #37474f; }
 .wire-btn.active { border-color: #ffd54f; box-shadow: 0 0 0 2px rgba(255, 213, 79, .45); }
 
-.toolbar-right { margin-left: auto; display: flex; gap: 8px; }
+.toolbar-right { margin-left: auto; display: flex; gap: 6px; }
 .tool-btn {
   background: #455a64;
   color: #fff;
   border: none;
   border-radius: 6px;
-  padding: 6px 14px;
+  padding: 5px 10px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
 }
 .tool-btn:hover:not(:disabled) { background: #546e7a; }
 .tool-btn:disabled { opacity: .35; cursor: not-allowed; }
@@ -95,6 +95,7 @@ body {
   flex-shrink: 0;
 }
 #status-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#author-credit { flex-shrink: 0; color: #78909c; font-size: 12px; white-space: nowrap; margin-left: auto; }
 #view-controls { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
 .zoom-btn {
   width: 26px;

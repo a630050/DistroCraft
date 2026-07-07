@@ -9,18 +9,20 @@
 <body>
 
 <header id="toolbar">
-  <h1>⚡ 配電練習小工具</h1>
+  <h1>⚡ 配電練習工具</h1>
   <div class="wire-picker">
-    <span>線色:</span>
-    <button id="btn-red" class="wire-btn red active" title="火線">紅線(火線)</button>
-    <button id="btn-white" class="wire-btn white" title="中性線">白線(中性線)</button>
+    <button id="btn-red" class="wire-btn red active" title="火線">火線</button>
+    <button id="btn-white" class="wire-btn white" title="中性線">中性線</button>
   </div>
   <div class="toolbar-right">
-    <button id="btn-load-template" class="tool-btn" title="載入雙切開關範例">📄 載入模板</button>
+    <button id="btn-load-template" class="tool-btn" title="載入三路開關範例">📄 模板</button>
+    <button id="btn-export" class="tool-btn" title="匯出當前組態為 JSON 檔案">📤 匯出</button>
+    <button id="btn-import" class="tool-btn" title="匯入先前保存的 JSON 檔案">📥 匯入</button>
+    <input type="file" id="import-file" accept=".json" style="display:none">
     <button id="btn-undo" class="tool-btn" title="復原 (Ctrl+Z)">↩ 復原</button>
     <button id="btn-redo" class="tool-btn" title="重做 (Ctrl+Y)">↪ 重做</button>
-    <button id="btn-fit" class="tool-btn" title="自動縮放到可以看到所有元件">🔍 顯示全部</button>
-    <button id="btn-clear" class="tool-btn">🗑 重置畫布</button>
+    <button id="btn-fit" class="tool-btn" title="自動縮放到可以看到所有元件">🔍 全景</button>
+    <button id="btn-clear" class="tool-btn">🗑 清空</button>
     <button id="btn-help" class="tool-btn">❓ 說明</button>
   </div>
 </header>
@@ -67,6 +69,7 @@
 
 <footer id="statusbar">
   <span id="status-text"></span>
+  <span id="author-credit">程式設計：徐承佑</span>
   <div id="view-controls">
     <button id="btn-zoom-out" class="zoom-btn" title="縮小">−</button>
     <input type="range" id="zoom-slider" min="30" max="250" value="100" title="縮放比例">
